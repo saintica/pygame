@@ -1,8 +1,12 @@
 import pygame
 import sys
+import random
 
 # Initialize pygame
 pygame.init()
+
+# Load the sound
+tick_sound = pygame.mixer.Sound('boing.mp3')
 
 # Set up the screen
 screen_width, screen_height = 800, 600
@@ -22,6 +26,7 @@ bubble_dx, bubble_dy = 0, 0
 follow_mouse = False
 
 # Main game loop
+clock = pygame.time.Clock()
 while True:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
@@ -52,11 +57,17 @@ while True:
     # Bounce off the screen edges
     if bubble_x < bubble_radius or bubble_x > screen_width - bubble_radius:
         bubble_dx *= -1
+        tick_sound.play()
     if bubble_y < bubble_radius or bubble_y > screen_height - bubble_radius:
         bubble_dy *= -1
+        tick_sound.play()
 
-    # Clear the screen
-    screen.fill((255, 255, 255))
+    # Clear the screen with a beautiful background
+    screen.fill((50, 50, 150))  # Dark blue background
+    for i in range(50):  # Adding stars to the background
+        star_x = random.randint(0, screen_width)
+        star_y = random.randint(0, screen_height)
+        pygame.draw.circle(screen, (255, 255, 255), (star_x, star_y), 2)
 
     # Draw the bubble
     pygame.draw.circle(screen, bubble_color, (int(bubble_x), int(bubble_y)), bubble_radius)
@@ -65,4 +76,4 @@ while True:
     pygame.display.flip()
 
     # Control frame rate
-    pygame.time.Clock().tick(60)
+    clock.tick(60)
